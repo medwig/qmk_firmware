@@ -49,7 +49,7 @@ enum custom_keycodes {
 #define LGUI_BS LGUI_T(KC_BSPC)
 #define RALT_TB RALT_T(KC_TAB)
 
-#define TT_N_S TT(_NUM_SYM)
+#define TT_N_S LT(_NUM_SYM, KC_TAB)
 #define TT_NAV TT(_NAV)
 #define TO_QWRT TO(_QWERTY)
 #define TO_N_S TO(_NUM_SYM)
