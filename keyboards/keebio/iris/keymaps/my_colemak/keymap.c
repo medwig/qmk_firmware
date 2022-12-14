@@ -1,6 +1,5 @@
 // Copyright 2022 Ignacy Radliński (@radlinskii)
 // SPDX-License-Identifier: GPL-2.0-or-later
-
 #include QMK_KEYBOARD_H
 
 #include "light_layers.h"
@@ -13,6 +12,9 @@ enum my_layers {
     _MOUSE,
     _MEDIA_MISC,
     _GAMING,
+    _TL_1,
+    _TL_2,
+    _MEDIA,
 };
 
 enum custom_keycodes {
@@ -60,12 +62,28 @@ enum custom_keycodes {
 #define TO_M_M TO(_MEDIA_MISC)
 #define TO_GAMING TO(_GAMING)
 
+// L+U+Y = media layer, regardless of press order
+// hold any one to activate transition layer 1
+#define TT_1_L LT(_TL_1, KC_L)
+#define TT_1_U LT(_TL_1, KC_U)
+#define TT_1_Y LT(_TL_1, KC_Y)
+
+// hold any two to activate transition layer 2
+#define TT_2_L LT(_TL_2, KC_L)
+#define TT_2_U LT(_TL_2, KC_U)
+#define TT_2_Y LT(_TL_2, KC_Y)
+
+// hold all three to activate media layer
+#define TT_M_L LT(_MEDIA, KC_L)
+#define TT_M_U LT(_MEDIA, KC_U)
+#define TT_M_Y LT(_MEDIA, KC_Y)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAK] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX, KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSLS,
+     XXXXXXX, KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    TT_1_L,  TT_1_U,  TT_1_Y,  KC_SCLN, KC_BSLS,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_BSPC, LALT_KA, LCTL_KR, LGUI_KS, LSFT_KT, KC_G,                               KC_M,    RSFT_KN, RGUI_KE, RCTL_KI, RALT_KO, KC_QUOT,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
@@ -160,6 +178,50 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                     KC_BSPC, LSFT_TB,  KC_SPC,                     KC_ENT, TT_NAV,  KC_TAB
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
+
+   [_TL_1] = LAYOUT(
+    //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS, TT_2_L,  TT_2_U,  TT_2_Y,  KC_TRNS, KC_TRNS,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, _______,          _______, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                    KC_TRNS, KC_TRNS, KC_TRNS,                   KC_TRNS, KC_TRNS, KC_TRNS
+                                // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+    ),
+
+   [_TL_2] = LAYOUT(
+    //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS, TT_M_L,  TT_M_U,  TT_M_Y,  KC_TRNS, KC_TRNS,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, _______,          _______, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                    KC_TRNS, KC_TRNS, KC_TRNS,                   KC_TRNS, KC_TRNS, KC_TRNS
+                                // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+    ),
+
+    [_MEDIA] = LAYOUT(
+    //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+       QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QWERTY,                             COLEMAK, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MUTE, XXXXXXX,                            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       XXXXXXX, XXXXXXX, KC_VOLU, KC_MPLY, KC_MNXT, KC_BRIU,                            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+       XXXXXXX, XXXXXXX, KC_VOLD, KC_MSTP, KC_MPRV, KC_BRID, _______,          _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                      _______, DEFAULT, _______,                   _______, DEFAULT, _______
+                                  // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+    ),
+
+
 
 
 };
